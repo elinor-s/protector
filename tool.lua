@@ -10,17 +10,20 @@ minetest.register_craftitem("protector:tool", {
 
 		local name = user:get_player_name()
 
-		-- check node player occupies
+		-- check nodes under player
 		local pos = user:getpos()
-		local nod = minetest.get_node(pos).name
-		if nod ~= "protector:protect2" then
-			-- check node under player
-			pos.y = pos.y - 1
+		local nod
+		for _ = 1, protector.radius*2 + 1 do
 			nod = minetest.get_node(pos).name
-			if nod ~= "protector:protect"
-			and nod ~= "protector:protect2" then
-				return
+			if nod == "protector:protect"
+			or nod == "protector:protect2" then
+				break
 			end
+			pos.y = pos.y - 1
+		end
+		if nod ~= "protector:protect"
+		and nod ~= "protector:protect2" then
+			return
 		end
 
 		-- get members on protector
